@@ -4,46 +4,44 @@ from datetime import datetime
 import time
 import json
 
-csv = pd.read_csv("epa_daily.csv")
-epa_daily = csv.values.tolist()
+csv = pd.read_csv("../pollution.csv")
+pollution = csv.values.tolist()
 
-producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer = lambda x: json.dumps(x).encode('utf-8'))
 
 while True:
-    current_date = datetime.strptime(epa_daily[0][4], "%Y-%m-%d")
+    current_date = datetime.strptime(pollution[0][4], "%Y-%m-%d")
 
-    for record in epa_daily:
-        if(current_date==datetime.strptime(record[4], "%Y-%m-%d")):
+    for record in pollution:
+        if(current_date == datetime.strptime(record[4], "%Y-%m-%d")):
             record = tuple(record)
             to_send = {
-                'state_code': record[0],
-                'county_code': record[1],
-                'parameter_name': record[2],
-                'sample_duration': record[3],
-                'date_local': record[4],
-                'units_of_measure': record[5],
-                'observation_count': record[6],
-                'arithmetic_mean': record[7],
-                'state_name': record[8],
-                'county_name': record[9],
-                'city_name': record[10]
+                'State Code': record[0],
+                'Address': record[1],
+                'State': record[2],
+                'County': record[3],
+                'City': record[4],
+                'Date Local': record[5],
+                'NO2 Mean': record[6],
+                'O3 Mean': record[7],
+                'SO2 Mean': record[8],
+                'CO mean': record[9]
             }
-            producer.send('sensors-data', value = to_send)
+            producer.send('sensors-data', value = data_to_send)
         else:
             time.sleep(10)
             current_date = datetime.strptime(record[4], "%Y-%m-%d")
             record = tuple(record)
-            to_send = {
-                'state_code': record[0],
-                'county_code': record[1],
-                'parameter_name': record[2],
-                'sample_duration': record[3],
-                'date_local': record[4],
-                'units_of_measure': record[5],
-                'observation_count': record[6],
-                'arithmetic_mean': record[7],
-                'state_name': record[8],
-                'county_name': record[9],
-                'city_name': record[10]
+            data_to_send = {
+                'State Code': record[0],
+                'Address': record[1],
+                'State': record[2],
+                'County': record[3],
+                'City': record[4],
+                'Date Local': record[5],
+                'NO2 Mean': record[6],
+                'O3 Mean': record[7],
+                'SO2 Mean': record[8],
+                'CO mean': record[9]
             }
-            producer.send('sensors-data', value = to_send)
+            producer.send('sensors-data', value = data_to_send)
