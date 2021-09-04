@@ -25,7 +25,7 @@ while True:
                 'NO2 Mean': record[6],
                 'O3 Mean': record[7],
                 'SO2 Mean': record[8],
-                'CO mean': record[9]
+                'CO Mean': record[9]
             }
             producer.send('sensors-data', value = data_to_send)
         else:
@@ -42,6 +42,6 @@ while True:
                 'NO2 Mean': record[6],
                 'O3 Mean': record[7],
                 'SO2 Mean': record[8],
-                'CO mean': record[9]
+                'CO Mean': record[9]
             }
             producer.send('sensors-data', value = data_to_send)
