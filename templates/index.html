@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>Web_app</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+ 
+ 
+</head>
+ 
+<body>
+ <table>
+     <tr>
+         {% for header in headings %}
+         <th>{{ header}}</th>
+         {%endfor%}
+     </tr>
+     <tr>
+        {% for row in data %}
+        <tr>
+            {% for cell in row %}
+            <td>
+                {{cell}}
+            </td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+        
+     </tr>
+ </table>
+    
+</body>
+ 
+</html>
