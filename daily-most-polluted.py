@@ -20,16 +20,18 @@ dataframe = spark_session \
 dataframe = dataframe.selectExpr("CAST(value AS STRING)")
 
 dataframe = dataframe.select(
-    get_json_object(dataframe.value, '$.State Code').alias('statecode'),
-    get_json_object(dataframe.value, '$.Address').alias('address'),
     get_json_object(dataframe.value, '$.State').alias('state'),
     get_json_object(dataframe.value, '$.County').alias('county'),
     get_json_object(dataframe.value, '$.City').alias('city'),
     get_json_object(dataframe.value, '$.Date Local').alias('datelocal'),
     get_json_object(dataframe.value, '$.NO2 Mean').alias('no2mean'),
-    get_json_object(dataframe.value, '$.O3 Mean').alias('o3mean'),
+    get_json_object(dataframe.value, '$.NO2 AQI').alias('no2aqi'),
     get_json_object(dataframe.value, '$.SO2 Mean').alias('so2mean'),
+    get_json_object(dataframe.value, '$.SO2 AQI').alias('so2aqi'),
     get_json_object(dataframe.value, '$.CO Mean').alias('comean'),
+    get_json_object(dataframe.value, '$.CO AQI').alias('coaqi'),
+    get_json_object(dataframe.value, '$.O3 Mean').alias('o3mean'),
+    get_json_object(dataframe.value, '$.O3 AQI').alias('o3aqi'),
     get_json_object(dataframe.value, '$.Timestamp').alias('ts')
 )
 

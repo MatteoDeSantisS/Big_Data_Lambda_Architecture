@@ -18,16 +18,18 @@ while True:
         if(current_date == datetime.strptime(record[5], "%Y-%m-%d")):
             record = tuple(record)
             data_to_send = {
-                'State Code': record[0],
-                'Address': record[1],
-                'State': record[2],
-                'County': record[3],
-                'City': record[4],
-                'Date Local': record[5],
-                'NO2 Mean': record[6],
-                'O3 Mean': record[7],
-                'SO2 Mean': record[8],
-                'CO Mean': record[9],
+                'State': record[0],
+                'County': record[1],
+                'City': record[2],
+                'Date Local': record[3],
+                'NO2 Mean': record[4],
+                'N2 AQI': record[5],
+                'SO2 Mean': record[6],
+                'SO2 AQI': record[7],
+                'CO Mean': record[8],
+                'CO AQI': record[9],
+                'O3 Mean': record[8],
+                'O3 AQI': record[9],
                 'Timestamp' : timestamp
             }
             producer.send('sensors-data', value = data_to_send)
@@ -36,17 +38,18 @@ while True:
             current_date = datetime.strptime(record[5], "%Y-%m-%d")
             record = tuple(record)
             data_to_send = {
-                'State Code': record[0],
-                'Address': record[1],
-                'State': record[2],
-                'County': record[3],
-                'City': record[4],
-                'Date Local': record[5],
-                'NO2 Mean': record[6],
-                'O3 Mean': record[7],
-                'SO2 Mean': record[8],
-                'CO Mean': record[9],
-                'Timestamp': timestamp
-                
+                'State': record[0],
+                'County': record[1],
+                'City': record[2],
+                'Date Local': record[3],
+                'NO2 Mean': record[4],
+                'N2 AQI': record[5],
+                'SO2 Mean': record[6],
+                'SO2 AQI': record[7],
+                'CO Mean': record[8],
+                'CO AQI': record[9],
+                'O3 Mean': record[8],
+                'O3 AQI': record[9],
+                'Timestamp' : timestamp
             }
             producer.send('sensors-data', value = data_to_send)
