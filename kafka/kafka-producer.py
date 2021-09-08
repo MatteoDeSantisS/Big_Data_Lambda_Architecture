@@ -1,6 +1,6 @@
 import pandas as pd
 from kafka import KafkaProducer
-from datetime import datetime
+from datetime import date, datetime
 import time
 import json
 
@@ -11,8 +11,10 @@ producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer = 
 
 while True:
     current_date = datetime.strptime(pollution[0][5], "%Y-%m-%d")
-
+    
     for record in pollution:
+        timestamp = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
         if(current_date == datetime.strptime(record[5], "%Y-%m-%d")):
             record = tuple(record)
             data_to_send = {
@@ -25,7 +27,8 @@ while True:
                 'NO2 Mean': record[6],
                 'O3 Mean': record[7],
                 'SO2 Mean': record[8],
-                'CO Mean': record[9]
+                'CO Mean': record[9],
+                'Timestamp' : timestamp
             }
             producer.send('sensors-data', value = data_to_send)
         else:
@@ -42,6 +45,8 @@ while True:
                 'NO2 Mean': record[6],
                 'O3 Mean': record[7],
                 'SO2 Mean': record[8],
-                'CO Mean': record[9]
+                'CO Mean': record[9],
+                'Timestamp': timestamp
+                
             }
             producer.send('sensors-data', value = data_to_send)
