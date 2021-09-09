@@ -10,12 +10,12 @@ pollution = csv.values.tolist()
 producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer = lambda x: json.dumps(x).encode('utf-8'))
 
 while True:
-    current_date = datetime.strptime(pollution[0][5], "%Y-%m-%d")
+    current_date = datetime.strptime(pollution[0][3], "%Y-%m-%d")
     
     for record in pollution:
         timestamp = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-        if(current_date == datetime.strptime(record[5], "%Y-%m-%d")):
+        if(current_date == datetime.strptime(record[3], "%Y-%m-%d")):
             record = tuple(record)
             data_to_send = {
                 'State': record[0],
@@ -23,7 +23,7 @@ while True:
                 'City': record[2],
                 'Date Local': record[3],
                 'NO2 Mean': record[4],
-                'N2 AQI': record[5],
+                'NO2 AQI': record[5],
                 'SO2 Mean': record[6],
                 'SO2 AQI': record[7],
                 'CO Mean': record[8],
@@ -35,7 +35,7 @@ while True:
             producer.send('sensors-data', value = data_to_send)
         else:
             time.sleep(10)
-            current_date = datetime.strptime(record[5], "%Y-%m-%d")
+            current_date = datetime.strptime(record[3], "%Y-%m-%d")
             record = tuple(record)
             data_to_send = {
                 'State': record[0],
