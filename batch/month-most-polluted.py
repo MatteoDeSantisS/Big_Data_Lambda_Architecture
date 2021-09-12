@@ -3,37 +3,34 @@ from pyspark.sql.functions import avg, max
 
 spark_session = SparkSession \
     .builder \
-    .appName("Pollution_Streaming_Analyzer") \
+    .appName("Month Most-Polluted City") \
     .config("spark.cassandra.connection.host", "localhost:9042") \
     .getOrCreate()
 
-month_most_polluted = spark_session \
+pollution = spark_session \
     .read \
     .format("org.apache.spark.sql.cassandra") \
     .options(keyspace="stuff", table="pollution") \
     .load()
 
-city_data = month_most_polluted \
-    .select('city', 'state', 'year', 'month', 'no2mean', 'no2aqi')
+#Aggrega i dati di una stessa città per stato, mese e anno
+pollution = pollution \
+    .groupBy('state', 'city', 'month', 'year') \
+    .agg(avg('no2mean').alias('no2mean'), max('no2aqi').alias('no2aqimax') ) \
+    .select('state', 'city', 'month', 'year', 'no2mean', 'no2aqimax')
 
-by_state = month_most_polluted \
-    .groupBy('month', 'year', 'state', 'no2aqi', 'no2mean') \
-    .agg(avg('no2mean'), max('no2aqi'))\
-    .orderBy('no2aqi')\
-    .select('month', 'year', 'state', 'no2aqi', 'no2mean')
+most_polluted_by_month = pollution \
+    .withColumnRenamed('state', 'mstate').withColumnRenamed('month', 'mmonth').withColumnRenamed('year','myear') \
+    .groupBy('mstate', 'mmonth', 'myear') \
+    .agg(max('no2aqimax').alias('mno2aqimax')) \
+    .select('mstate', 'mmonth', 'myear', 'mno2aqimax')
 
-city_data.createOrReplaceTempView("CityData")
-by_state.createOrReplaceTempView("MostPollutedByState")
-
-#joinDf = spark_session.sql("select * from MostPollutedByState m, CityData cd where m.state == cd.state & m.year == cd.year \
-#                           & m.month == cd.month & m.no2mean == cd.no2mean & m.no2aqi == cd.no2aqi")
-
-joinDf = by_state.join(city_data, (by_state.state == city_data.state) & 
-                                    (by_state.year == city_data.year) &
-                                    (by_state.month == city_data.month) &
-                                    (by_state.no2mean == city_data.no2mean) &
-                                    (by_state.no2aqi == city_data.aqi))\
-                .select('city','state','month','year','no2mean','no2aqi')
+joinDf = most_polluted_by_month.join(pollution,
+    (most_polluted_by_month.mstate == pollution.state) &
+    (most_polluted_by_month.mmonth == pollution.month) &
+    (most_polluted_by_month.myear == pollution.year) &
+    (most_polluted_by_month.mno2aqimax == pollution.no2aqimax) 
+).select('city', 'state', 'month', 'year', 'no2mean', 'no2aqimax')
 
 query = joinDf \
     .write \
@@ -41,4 +38,5 @@ query = joinDf \
     .mode("append")\
     .options(keyspace="stuff", table="month_most_polluted")\
     .save()
+
 

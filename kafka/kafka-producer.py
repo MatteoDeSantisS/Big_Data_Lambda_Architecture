@@ -3,7 +3,7 @@ from kafka import KafkaProducer
 import time
 import json
 
-csv = pd.read_csv("../data/pollution.csv")
+csv = pd.read_csv("../dataset/pollution.csv")
 pollution = csv.values.tolist()
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda x: json.dumps(x).encode('utf-8'))
