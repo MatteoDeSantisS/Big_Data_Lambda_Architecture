@@ -3,7 +3,7 @@ from pyspark.sql.functions import avg, max
 
 spark_session = SparkSession \
     .builder \
-    .appName("Month Most-Polluted City") \
+    .appName("Year Most-Polluted City") \
     .config("spark.cassandra.connection.host", "localhost:9042") \
     .getOrCreate()
 
