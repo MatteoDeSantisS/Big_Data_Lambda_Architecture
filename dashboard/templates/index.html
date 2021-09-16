@@ -14,22 +14,52 @@
         <p class="col-6 mt-4">Tabelle che indicano la qualità dell'aria per diverse città americane.
             <br>AQI sta per Air Quality Index, è un valore che varia da 0 a 500
         </p>
+        <div class="row tables-desc mt-2 h4">
+            Statische mensili dei 4 maggiori inquinanti 
+        </div>
         <div class="row tables mt-2">
             <div class="col-6 table1-container">
-                <div class="row table1-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                <div class="row table1-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con AQI Massimo (per anno e stato)
+                        Città con valori di AQI rilevanti per il Biossido di Azoto (NO2) - (mese/stato)
                     </div>
                 </div>
                 <div class="row table1 overflow-scroll" style="max-height: 600px;">
                     <table class="table thead-light table-dark table-striped">
                         <tr>
-                            {% for header in headers_year %}
+                            {% for header in headers_no2month %}
                             <th scope="col">{{ header }}</th>
                             {% endfor %}
                         </tr>
                         <tr>
-                            {% for row in data_year %}
+                            {% for row in data_no2_month %}
+                        <tr>
+                            {% for cell in row %}
+                            <td>
+                                {{ cell }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </div>  
+            </div>
+            <div class="col-6 table2-container">
+                <div class="row table2-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                    <div class="col-12">
+                        Città con valore di AQI rilevante per il Biossido di Zolfo (SO2) - (mese/stato)
+                    </div>
+                </div>
+                <div class="row table2 overflow-scroll" style="max-height: 600px;">
+                    <table class="table thead-light table-dark table-striped">
+                        <tr>
+                            {% for header in headers_so2month %}
+                            <th scope="col">{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for row in data_so2_month %}
                         <tr>
                             {% for cell in row %}
                             <td>
@@ -42,21 +72,23 @@
                     </table>
                 </div>
             </div>
-            <div class="col-6 table2-container">
-                <div class="row table2-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+        </div>
+        <div class="row tables mt-2">
+            <div class="col-6 table3-container">
+                <div class="row table3-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con AQI Massimo (per mese e stato)
+                        Città con valore di AQI rilevante per il Monossido di Carbonio (CO) - (mese/stato)
                     </div>
                 </div>
-                <div class="row table2 overflow-scroll" style="max-height: 600px;">
+                <div class="row table3 overflow-scroll" style="max-height: 600px;">
                     <table class="table thead-light table-dark table-striped">
                         <tr>
-                            {% for header in headers_month %}
+                            {% for header in headers_comonth %}
                             <th scope="col">{{ header }}</th>
                             {% endfor %}
                         </tr>
                         <tr>
-                            {% for row in data_month %}
+                            {% for row in data_co_month %}
                         <tr>
                             {% for cell in row %}
                             <td>
@@ -67,7 +99,34 @@
                         {% endfor %}
                         </tr>
                     </table>
-                </div>  
+                </div>
+            </div>
+            <div class="col-6 table4-container">
+                <div class="row table3-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                    <div class="col-12">
+                        Città con valore di AQI rilevante per l'Ozono (O3) - (mese/stato)
+                    </div>
+                </div>
+                <div class="row table3 overflow-scroll" style="max-height: 600px;">
+                    <table class="table thead-light table-dark table-striped">
+                        <tr>
+                            {% for header in headers_o3month %}
+                            <th scope="col">{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for row in data_o3_month %}
+                        <tr>
+                            {% for cell in row %}
+                            <td>
+                                {{ cell }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
