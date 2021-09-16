@@ -11,17 +11,20 @@
         <div class="row page-title mt-4 justify-content-center">
             <h2 class="col-6">Air Quality Lambda Architecture </h3>
         </div>
-        <p class="col-6 mt-4">Tabelle che indicano la qualità dell'aria per diverse città americane.
-            <br>AQI sta per Air Quality Index, è un valore che varia da 0 a 500
-        </p>
-        <div class="row tables-desc mt-2 h4">
-            Statische mensili dei 4 maggiori inquinanti 
+        <div class="row tables-desc mt-2 h5">
+            Statische mensili, che mostrano la concentrazione nell'area dei 4 inquinanti più pericolosi in diverse città americane:
         </div>
-        <div class="row tables mt-2">
+        <div class="row">
+            - Biossido di Azoto (NO2)<br>
+            - Biossido di Zolfo (SO2)<br>
+            - Monossido di Carbonio (CO)<br>
+            - Ozono (O3)
+        </div>
+        <div class="row tables mt-2 mb-4">
             <div class="col-6 table1-container">
                 <div class="row table1-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con valori di AQI rilevanti per il Biossido di Azoto (NO2) - (mese/stato)
+                        Città con più alta concentrazione di NO2 (per stato/mese)
                     </div>
                 </div>
                 <div class="row table1 overflow-scroll" style="max-height: 600px;">
@@ -48,7 +51,7 @@
             <div class="col-6 table2-container">
                 <div class="row table2-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con valore di AQI rilevante per il Biossido di Zolfo (SO2) - (mese/stato)
+                        Città con più alta concentrazione di SO2 (per stato/mese)
                     </div>
                 </div>
                 <div class="row table2 overflow-scroll" style="max-height: 600px;">
@@ -73,11 +76,11 @@
                 </div>
             </div>
         </div>
-        <div class="row tables mt-2">
+        <div class="row tables mt-2 mb-5">
             <div class="col-6 table3-container">
-                <div class="row table3-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                <div class="row table3-desc table-title text-light bg-danger h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con valore di AQI rilevante per il Monossido di Carbonio (CO) - (mese/stato)
+                        Città con più alta concentrazione di CO (per stato/mese)
                     </div>
                 </div>
                 <div class="row table3 overflow-scroll" style="max-height: 600px;">
@@ -102,9 +105,9 @@
                 </div>
             </div>
             <div class="col-6 table4-container">
-                <div class="row table3-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                <div class="row table3-desc table-title text-dark bg-warning h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
-                        Città con valore di AQI rilevante per l'Ozono (O3) - (mese/stato)
+                        Città con più alta concentrazione di O3 (per stato/mese)
                     </div>
                 </div>
                 <div class="row table3 overflow-scroll" style="max-height: 600px;">
@@ -132,5 +135,14 @@
     </div>
     </div>
 </body>
-
+<footer class="bg-dark text-center text-light">
+    <div class="container p-3">
+        <div>Progetto Air Lambda Architecture<br>Matteo de Santis<br>Kaio Cesar Alves Reis
+        </div>
+    </div>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        <div>Corso Big Data 2020/2021
+        </div>
+    </div>   
+</footer>
 </html>

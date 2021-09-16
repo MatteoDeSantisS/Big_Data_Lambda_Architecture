@@ -1,24 +1,16 @@
-from flask import Flask,render_template
+from flask import Flask, render_template
 from cassandra.cluster import Cluster 
-import time
 
 app = Flask(__name__)
 
-if __name__ == "__main__":
-    app.run()
-
-@app.route("/")
 def show_tables():
     
     cluster = Cluster()
     session = cluster.connect("stuff")
 
-    rows_no2_by_month = session.execute("SELECT * FROM no2_month WHERE year=2010 and month=1")
-
+    rows_no2_by_month = session.execute("SELECT * FROM no2_month WHERE year=2010")
     rows_so2_by_month = session.execute("SELECT * FROM so2_month WHERE year=2010")
-
     rows_co_by_month = session.execute("SELECT * FROM co_month WHERE year=2010")
-
     rows_o3_by_month = session.execute("SELECT * FROM o3_month WHERE year=2010")
    
     return render_template('index.html', 
@@ -31,6 +23,10 @@ def show_tables():
                             data_co_month = rows_co_by_month,
                             data_o3_month = rows_o3_by_month,)
 
+@app.route("/")
+def get_index():
+    return show_tables()
 
-
+if __name__ == "__main__":
+    app.run()
 
