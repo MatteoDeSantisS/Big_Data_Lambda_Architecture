@@ -34,19 +34,19 @@ dataframe = dataframe.select(
 )
 
 dataframe = dataframe \
+    .select('state', 'county', 'city', 'day', 'month', 'year', 'no2mean', 'no2aqi', 'so2mean', 'so2aqi', 'comean', 'coaqi', 'o3mean', 'o3aqi') \
+    .filter((col('so2aqi').isNotNull()) | (col('no2aqi').isNotNull()) | (col('o3aqi').isNotNull()) | (col('coaqi').isNotNull()))
+
+dataframe = dataframe \
     .withColumn("day", dayofmonth("datelocal")) \
     .withColumn("month", month("datelocal")) \
     .withColumn("year", year("datelocal"))
-
-dataframe = dataframe \
-    .select('state', 'county', 'city', 'day', 'month', 'year', 'no2mean', 'no2aqi', 'so2mean', 'so2aqi', 'comean', 'coaqi', 'o3mean', 'o3aqi') \
-    .filter((col('so2aqi').isNotNull()) | (col('no2aqi').isNotNull()) | (col('o3aqi').isNotNull()) | (col('coaqi').isNotNull()))
 
 query = dataframe.writeStream \
     .trigger(processingTime="5 seconds")\
     .format("org.apache.spark.sql.cassandra")\
     .option("keyspace", "stuff")\
-    .option("checkpointLocation", '/tmp/al/checkpoint/') \
+    .option("checkpointLocation", '/tmp/2/checkpoint/') \
     .option("table", "pollution")\
     .outputMode("append")\
     .start()
