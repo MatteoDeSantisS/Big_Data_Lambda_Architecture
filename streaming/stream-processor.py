@@ -46,7 +46,7 @@ query = dataframe.writeStream \
     .trigger(processingTime="5 seconds")\
     .format("org.apache.spark.sql.cassandra")\
     .option("keyspace", "stuff")\
-    .option("checkpointLocation", '/tmp/2/checkpoint/') \
+    .option("checkpointLocation", '/tmp/stream/checkpoint/') \
     .option("table", "pollution")\
     .outputMode("append")\
     .start()

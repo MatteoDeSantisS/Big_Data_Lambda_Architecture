@@ -4,47 +4,71 @@
 <head>
     <title>Air Quality Lambda Architecture</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
 </head>
 
 <body>
-    <div class="container dashboard">
-        <div class="row page-title mt-4 justify-content-center">
-            <h2 class="col-6">Air Quality Lambda Architecture </h3>
+    <script>
+    setInterval(function() {
+        $.ajax({
+            type: "POST",
+            url: "/data",
+            dataType: "json",
+        })
+        .done(function(data){
+            console.log(data);
+            var tableHtml = '';
+
+            for (row of data){
+                tableHtml += '<tr>';
+                    for(cell of row)
+                        tableHtml += '<td>' + cell + '</td>';
+                tableHtml += '</tr>';
+            }
+            $('#no2-table').append(tableHtml)
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR, textStatus, errorThrown);
+        });
+    }, 1000 * 60);
+    </script>
+    <nav class="row navbar navbar-dark bg-dark mb-4 pt-4" style="box-shadow: 0px 5px 9px -4px #000000;">
+        <div class="navbar-text text-light text-center h2">
+                Air Quality Lambda Architecture
         </div>
+    </nav>
+    <div class="container dashboard">
         <div class="row tables-desc mt-2 h5">
             Statische mensili, che mostrano la concentrazione nell'area dei 4 inquinanti più pericolosi in diverse città americane:
         </div>
-        <div class="row">
-            - Biossido di Azoto (NO2)<br>
-            - Biossido di Zolfo (SO2)<br>
-            - Monossido di Carbonio (CO)<br>
-            - Ozono (O3)
+        <div class="row mb-5">
+            <div class="col-3"> Biossido di Azoto (NO2) </div>
+            <div class="col-3"> Biossido di Zolfo (SO2) </div>
+            <div class="col-3"> Monossido di Carbonio (CO) </div>
+            <div class="col-3"> Ozono (O3) </div>
         </div>
         <div class="row tables mt-2 mb-4">
-            <div class="col-6 table1-container">
+            <div class="col-6 table1-container" >
                 <div class="row table1-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
                     <div class="col-12">
                         Città con più alta concentrazione di NO2 (per stato/mese)
                     </div>
                 </div>
                 <div class="row table1 overflow-scroll" style="max-height: 600px;">
-                    <table class="table thead-light table-dark table-striped">
+                    <table class="table thead-light table-dark table-striped" id="no2-table">
                         <tr>
                             {% for header in headers_no2month %}
                             <th scope="col">{{ header }}</th>
                             {% endfor %}
                         </tr>
+                        {% for row in data_no2_month %}
                         <tr>
-                            {% for row in data_no2_month %}
-                        <tr>
-                            {% for cell in row %}
-                            <td>
-                                {{ cell }}
-                            </td>
+                            {% for d in row %}
+                            <td> {{ d }} </td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
-                        </tr>
                     </table>
                 </div>  
             </div>
@@ -133,16 +157,17 @@
             </div>
         </div>
     </div>
-    </div>
+
+    <footer class=" row bg-dark text-center text-light" style="box-shadow: 0px -5px 9px -4px #000000;">
+        <div class="container p-3">
+            <div>Progetto No.4 Lambda Architecture<br>Matteo de Santis e Kaio Cesar Alves Reis
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <div>Corso Big Data 2020/2021
+            </div>
+        </div>   
+    </footer>
 </body>
-<footer class="bg-dark text-center text-light">
-    <div class="container p-3">
-        <div>Progetto No.4 Lambda Architecture<br>Matteo de Santis e Kaio Cesar Alves Reis
-        </div>
-    </div>
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-        <div>Corso Big Data 2020/2021
-        </div>
-    </div>   
-</footer>
+
 </html>
