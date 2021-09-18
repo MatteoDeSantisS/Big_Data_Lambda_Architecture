@@ -10,29 +10,6 @@
 </head>
 
 <body>
-    <script>
-    setInterval(function() {
-        $.ajax({
-            type: "POST",
-            url: "/data",
-            dataType: "json",
-        })
-        .done(function(data){
-            console.log(data);
-            var tableHtml = '';
-
-            for (row of data){
-                tableHtml += '<tr>';
-                    for(cell of row)
-                        tableHtml += '<td>' + cell + '</td>';
-                tableHtml += '</tr>';
-            }
-            $('#no2-table').append(tableHtml)
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR, textStatus, errorThrown);
-        });
-    }, 1000 * 60);
-    </script>
     <nav class="row navbar navbar-dark bg-dark mb-4 pt-4" style="box-shadow: 0px 5px 9px -4px #000000;">
         <div class="navbar-text text-light text-center h2">
                 Air Quality Lambda Architecture
@@ -170,4 +147,5 @@
     </footer>
 </body>
 
+<script type="text/javascript" src="../static/js/update_tables.js"></script>
 </html>
