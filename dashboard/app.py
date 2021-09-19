@@ -11,6 +11,8 @@ def main():
     cluster = Cluster()
     session = cluster.connect("stuff")
 
+    daily_pollution = session.execute("SELECT * FROM daily_pollution")
+
     rows_no2_by_month = session.execute("SELECT * FROM no2_month")
     rows_so2_by_month = session.execute("SELECT * FROM so2_month")
     rows_co_by_month = session.execute("SELECT * FROM co_month")
@@ -21,8 +23,20 @@ def main():
     rows_co_by_year = session.execute("SELECT * FROM co_year")
     rows_o3_by_year = session.execute("SELECT * FROM o3_year")
    
-    return render_template('index.html', data_no2_month = rows_no2_by_month, data_so2_month = rows_so2_by_month, data_co_month = rows_co_by_month, data_o3_month = rows_o3_by_month,
+    return render_template('index.html', daily_data = daily_pollution, data_no2_month = rows_no2_by_month, data_so2_month = rows_so2_by_month, data_co_month = rows_co_by_month, data_o3_month = rows_o3_by_month,
     data_no2_year = rows_no2_by_year, data_so2_year = rows_so2_by_year, data_co_year = rows_co_by_year, data_o3_year = rows_o3_by_year)
+
+#------------------------------ Update daily table--------------------------------------
+@app.route('/daily-data' , methods=["GET", "POST"])
+def daily_data():
+
+    cluster = Cluster()
+    session = cluster.connect("stuff")
+
+    daily_pollution = session.execute("SELECT * FROM daily_pollution")
+    data = daily_pollution.all()
+   
+    return json.dumps(data)
 
 
 #------------------------------ Update tables by month --------------------------------------

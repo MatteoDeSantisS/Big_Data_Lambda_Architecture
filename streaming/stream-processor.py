@@ -3,7 +3,7 @@ from pyspark.sql.functions import col, dayofmonth, get_json_object, month, year
 
 spark_session = SparkSession \
     .builder \
-    .appName("Pollution_Streaming_Analyzer") \
+    .appName("Pollution Streamer") \
     .config("spark.cassandra.connection.host", "localhost:9042") \
     .getOrCreate()
 
@@ -34,13 +34,13 @@ dataframe = dataframe.select(
 )
 
 dataframe = dataframe \
-    .select('state', 'county', 'city', 'day', 'month', 'year', 'no2mean', 'no2aqi', 'so2mean', 'so2aqi', 'comean', 'coaqi', 'o3mean', 'o3aqi') \
-    .filter((col('so2aqi').isNotNull()) | (col('no2aqi').isNotNull()) | (col('o3aqi').isNotNull()) | (col('coaqi').isNotNull()))
-
-dataframe = dataframe \
     .withColumn("day", dayofmonth("datelocal")) \
     .withColumn("month", month("datelocal")) \
     .withColumn("year", year("datelocal"))
+
+dataframe = dataframe \
+    .select('state', 'county', 'city', 'day', 'month', 'year', 'no2mean', 'no2aqi', 'so2mean', 'so2aqi', 'comean', 'coaqi', 'o3mean', 'o3aqi') \
+    .filter((col('so2aqi').isNotNull()) | (col('no2aqi').isNotNull()) | (col('o3aqi').isNotNull()) | (col('coaqi').isNotNull()))
 
 query = dataframe.writeStream \
     .trigger(processingTime="5 seconds")\

@@ -8,14 +8,13 @@ setInterval(function() {
         dataType: "json",
     })
     .done(function(data){
-        console.log(data);
         var tableHtml = '<tr> \
                             <th scope="col"> Anno </th> \
                             <th scope="col"> Mese </th> \
                             <th scope="col"> Stato </th> \
                             <th scope="col"> Città </th> \
-                            <th scope="col"> No2 Aqi </th> \
-                            <th scope="col"> No2 Media </th> \
+                            <th scope="col"> NO2 Aqi </th> \
+                            <th scope="col"> NO2 Media </th> \
                         </tr>';
         var anchor = document.getElementById("no2-table")
 
@@ -48,14 +47,13 @@ setInterval(function() {
         dataType: "json",
     })
     .done(function(data){
-        console.log(data);
         var tableHtml = '<tr> \
                             <th scope="col"> Anno </th> \
                             <th scope="col"> Mese </th> \
                             <th scope="col"> Stato </th> \
                             <th scope="col"> Città </th> \
-                            <th scope="col"> So2 Aqi </th> \
-                            <th scope="col"> So2 Media </th> \
+                            <th scope="col"> SO2 Aqi </th> \
+                            <th scope="col"> SO2 Media </th> \
                         </tr>';
         var anchor = document.getElementById("so2-table")
 
@@ -88,14 +86,13 @@ setInterval(function() {
         dataType: "json",
     })
     .done(function(data){
-        console.log(data);
         var tableHtml = '<tr> \
                             <th scope="col"> Anno </th> \
                             <th scope="col"> Mese </th> \
                             <th scope="col"> Stato </th> \
                             <th scope="col"> Città </th> \
-                            <th scope="col"> Co Aqi </th> \
-                            <th scope="col"> Co Media </th> \
+                            <th scope="col"> CO Aqi </th> \
+                            <th scope="col"> CO Media </th> \
                         </tr>';
         var anchor = document.getElementById("co-table")
 
@@ -128,7 +125,6 @@ setInterval(function() {
         dataType: "json",
     })
     .done(function(data){
-        console.log(data);
         var tableHtml = '<tr> \
                             <th scope="col"> Anno </th> \
                             <th scope="col"> Mese </th> \
