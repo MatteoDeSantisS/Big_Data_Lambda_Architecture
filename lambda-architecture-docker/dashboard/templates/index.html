@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Air Quality Lambda Architecture</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+</head>
+
+<body>
+    <nav class="row navbar navbar-dark bg-dark mb-4 pt-4" style="box-shadow: 0px 5px 9px -4px #000000;">
+        <div class="navbar-text text-light text-center h2">
+                Air Quality Lambda Architecture
+        </div>
+    </nav>
+    <div class="container dashboard">
+        <div class="row tables-desc mt-2 h5">
+            Dashboard che mostra il livello di inquinamento in diverse città americane. I dati sono relativi ai 4 maggiori inquinanti dell'aria:
+        </div>
+        <div class="row mb-3 h6">
+            - Biossido di Azoto (NO2) <br>
+            - Biossido di Zolfo (SO2 <br>
+            - Monossido di Carbonio (CO) <br>
+            - Ozono (O3)
+        </div>
+        <div class="row text-light h3 p-2 bg-danger">Dati giornalieri <!--le tabelle si aggiornano ogni <script>UPDATE_MTIME</script>--></div>
+        <div class="daily-table">
+            <div class="row tables mt-2 mb-4">
+                <div class="col-12 table1-container" >
+                    <div class="row table1-desc table-title text-light bg-danger h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città che superano le soglie di "rischio moderato"             
+                        </div>
+                    </div>
+                    <div class="row daily-data overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="daily-table">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Mese</th>
+                                <th scope="col">Giorno</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Contea</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">CO AQI</th>
+                                <th scope="col">NO2 AQI</th>
+                                <th scope="col">O3 AQI</th>
+                                <th scope="col">SO2 AQI</th>                             
+                            </tr>
+                            {% for row in data_daily %}
+                            <tr>
+                                {% for d in row %}
+                                <td> {{ d }} </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>  
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-light h3 p-2 bg-success">Dati mensili <!--le tabelle si aggiornano ogni <script>UPDATE_MTIME</script>--></div>        
+        <div class="month-tables">
+            <div class="row tables mt-2 mb-4">
+                <div class="col-6 table1-container" >
+                    <div class="row table1-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di NO2 per stato                
+                        </div>
+                    </div>
+                    <div class="row table1 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="no2-table">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Mese</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">NO2 AQI</th>
+                                <th scope="col">NO2 Media</th>
+                            </tr>
+                            {% for row in data_no2_month %}
+                            <tr>
+                                {% for d in row %}
+                                <td> {{ d }} </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>  
+                </div>
+                <div class="col-6 table2-container">
+                    <div class="row table2-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di SO2 per stato
+                        </div>
+                    </div>
+                    <div class="row table2 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="so2-table">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Mese</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">SO2 AQI</th>
+                                <th scope="col">SO2 Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_so2_month %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row tables mt-2 mb-5">
+                <div class="col-6 table3-container">
+                    <div class="row table3-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di CO per stato
+                        </div>
+                    </div>
+                    <div class="row table3 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="co-table">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Mese</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">CO AQI</th>
+                                <th scope="col">CO Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_co_month %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-6 table4-container">
+                    <div class="row table4-desc table-title text-light bg-success h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di O3 per stato
+                        </div>
+                    </div>
+                    <div class="row table4 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="o3-table">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Mese</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">O3 AQI</th>
+                                <th scope="col">O3 Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_o3_month %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row text-light h3 p-2 bg-primary">Dati annuali <!--le tabelle si aggiornano ogni <script>UPDATE_YTIME</script>--></div>
+        <div class="year-tables">
+            <div class="row tables mt-2 mb-4">
+                <div class="col-6 table1-container" >
+                    <div class="row table1-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di NO2 per stato                
+                        </div>
+                    </div>
+                    <div class="row table1 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="no2-ytable">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">NO2 AQI</th>
+                                <th scope="col">NO2 Media</th>
+                            </tr>
+                            {% for row in data_no2_year %}
+                            <tr>
+                                {% for d in row %}
+                                <td> {{ d }} </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>  
+                </div>
+                <div class="col-6 table2-container">
+                    <div class="row table2-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di SO2 per stato
+                        </div>
+                    </div>
+                    <div class="row table2 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="so2-ytable">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">SO2 AQI</th>
+                                <th scope="col">SO2 Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_so2_year %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row tables mt-2 mb-5">
+                <div class="col-6 table3-container">
+                    <div class="row table3-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di CO per stato
+                        </div>
+                    </div>
+                    <div class="row table3 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="co-ytable">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">CO AQI</th>
+                                <th scope="col">CO Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_co_year%}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-6 table4-container">
+                    <div class="row table4-desc table-title text-light bg-primary h5 mb-1 pt-2 pb-2 justify-content-center" style="margin-right: 3px; box-shadow: inset 0px -2px 50px -12px #000000;">
+                        <div class="col-12">
+                            Città con più alta concentrazione di O3 per stato
+                        </div>
+                    </div>
+                    <div class="row table4 overflow-scroll" style="max-height: 600px;">
+                        <table class="table thead-light table-dark table-striped" id="o3-ytable">
+                            <tr>
+                                <th scope="col">Anno</th>
+                                <th scope="col">Stato</th>
+                                <th scope="col">Città</th>
+                                <th scope="col">O3 AQI</th>
+                                <th scope="col">O3 Media</th>
+                            </tr>
+                            <tr>
+                                {% for row in data_o3_year %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>
+                                    {{ cell }}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <footer class=" row bg-dark text-center text-light" style="box-shadow: 0px -5px 9px -4px #000000;">
+        <div class="container p-3">
+            <div>Progetto No.4 Lambda Architecture<br>Matteo de Santis e Kaio Cesar Alves Reis
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <div>Corso Big Data 2020/2021
+            </div>
+        </div>   
+    </footer>
+</body>
+
+<script type="text/javascript" src="../static/js/update-daily-table.js"></script>
+<script type="text/javascript" src="../static/js/update-month-tables.js"></script>
+<script type="text/javascript" src="../static/js/update-year-tables.js"></script>
+</html>
