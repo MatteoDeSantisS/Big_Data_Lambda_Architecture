@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 import json
 
-csv = pd.read_csv("../dataset/pollution.csv")
+csv = pd.read_csv("dataset/pollution.csv")
 pollution = csv.values.tolist()
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer = lambda x: json.dumps(x).encode('utf-8'))
@@ -30,7 +30,6 @@ while True:
             'O3 Mean': record[8],
             'O3 AQI': record[9]
             }
-            print(data_send)
             producer.send('sensors-data', value = data_send)
         else:
             time.sleep(10)

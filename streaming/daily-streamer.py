@@ -56,7 +56,7 @@ most_polluted_by_day = dataframe \
 query = most_polluted_by_day.writeStream \
     .trigger(processingTime="5 seconds")\
     .format("org.apache.spark.sql.cassandra")\
-    .option("keyspace", "stuff")\
+    .option("keyspace", "airqualitykeyspace")\
     .option("checkpointLocation", '/tmp/daily/aaa/checkpoint/') \
     .option("table", "daily_pollution")\
     .outputMode("append")\
