@@ -10,7 +10,7 @@ spark_session = SparkSession \
 pollution = spark_session \
     .read \
     .format("org.apache.spark.sql.cassandra") \
-    .options(keyspace="stuff", table="pollution") \
+    .options(keyspace="airqualitykeyspace", table="pollution") \
     .load()
 
 #------------------------------------------------------------ NO2 ------------------------------------------------------------------
@@ -38,7 +38,7 @@ query = no2_joindf \
     .write \
     .format("org.apache.spark.sql.cassandra")\
     .mode("append")\
-    .options(keyspace="stuff", table="no2_year")\
+    .options(keyspace="airqualitykeyspace", table="no2_year")\
     .save()
 
 #------------------------------------------------------------ SO2 ------------------------------------------------------------------
@@ -67,7 +67,7 @@ query = so2_joindf \
     .write \
     .format("org.apache.spark.sql.cassandra")\
     .mode("append")\
-    .options(keyspace="stuff", table="so2_year")\
+    .options(keyspace="airqualitykeyspace", table="so2_year")\
     .save()
 
 #------------------------------------------------------------ CO ------------------------------------------------------------------
@@ -96,7 +96,7 @@ query = co_joindf \
     .write \
     .format("org.apache.spark.sql.cassandra")\
     .mode("append")\
-    .options(keyspace="stuff", table="co_year")\
+    .options(keyspace="airqualitykeyspace", table="co_year")\
     .save()
 
 
@@ -126,5 +126,5 @@ query = o3_joindf \
     .write \
     .format("org.apache.spark.sql.cassandra")\
     .mode("append")\
-    .options(keyspace="stuff", table="o3_year")\
+    .options(keyspace="airqualitykeyspace", table="o3_year")\
     .save()

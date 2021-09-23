@@ -9,7 +9,7 @@ app = Flask(__name__)
 def main():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     daily_pollution = session.execute("SELECT * FROM daily_pollution")
 
@@ -31,7 +31,7 @@ def main():
 def daily_data():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     daily_pollution = session.execute("SELECT * FROM daily_pollution")
     data = daily_pollution.all()
@@ -44,7 +44,7 @@ def daily_data():
 def datano2():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_no2_by_month = session.execute("SELECT * FROM no2_month")
     data = rows_no2_by_month.all()
@@ -55,7 +55,7 @@ def datano2():
 def dataso2():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_so2_by_month = session.execute("SELECT * FROM so2_month")
     data = rows_so2_by_month.all()
@@ -66,7 +66,7 @@ def dataso2():
 def dataco():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_co_by_month = session.execute("SELECT * FROM co_month")
     data = rows_co_by_month.all()
@@ -77,7 +77,7 @@ def dataco():
 def datao3():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_o3_by_month = session.execute("SELECT * FROM o3_month")
     data = rows_o3_by_month.all()
@@ -89,7 +89,7 @@ def datao3():
 def datayearno2():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_no2_by_year = session.execute("SELECT * FROM no2_year")
     data = rows_no2_by_year.all()
@@ -100,7 +100,7 @@ def datayearno2():
 def datayearso2():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_so2_by_year = session.execute("SELECT * FROM so2_year")
     data = rows_so2_by_year.all()
@@ -111,7 +111,7 @@ def datayearso2():
 def datayearco():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_co_by_year = session.execute("SELECT * FROM co_year")
     data = rows_co_by_year.all()
@@ -122,7 +122,7 @@ def datayearco():
 def datayearo3():
 
     cluster = Cluster()
-    session = cluster.connect("stuff")
+    session = cluster.connect("airqualitykeyspace")
 
     rows_o3_by_year = session.execute("SELECT * FROM o3_year")
     data = rows_o3_by_year.all()
