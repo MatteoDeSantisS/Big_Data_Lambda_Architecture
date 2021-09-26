@@ -1,0 +1,22 @@
+per avviare docker usare --> docker-compose up
+#
+creare il topic kafka --> docker exec kafka-stream kafka-topics --create --topic sensors-data --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+#
+comando per copiare lo schema delle tabelle ->docker cp data/cass1/schema_tabelle/schema_tables.cql cass1:schema_tables.cql
+#
+comando per creare le tabelle-->docker exec -it cass1 cqlsh -u cassandra -p cassandra -f  /schema_tables.cql
+#
+comando per copiare l'eseguibile per spark --> docker cp batch/month-most-polluted.py spark-master:month-most-polluted.py
+comando per copiare l'eseguibile per spark --> docker cp batch/year-most-polluted.py spark-master:year-most-polluted.py
+comando per copiare l'eseguibile per spark -->docker cp streaming/daily-streamer.py spark-master:daily-streamer.py
+comando per copiare l'eseguibile per spark -->docker cp streaming/stream-processor.py spark-master:stream-processor.py
+#
+per avviare il producer dei messaggi aprire un terminale nella cartella kafka ed esegire il comando python3 kafka-producer.py
+#
+comando per runnare l'eseguibile --> docker exec spark-master /spark/bin/spark-submit --packages "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,com.datastax.spark:spark-cassandra-connector_2.12:3.0.1,com.datastax.cassandra:cassandra-driver-core:4.0.0" --master spark://spark-master:7077 month-most-polluted.py
+comando per runnare l'eseguibile --> docker exec spark-master /spark/bin/spark-submit --packages "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,com.datastax.spark:spark-cassandra-connector_2.12:3.0.1,com.datastax.cassandra:cassandra-driver-core:4.0.0" --master spark://spark-master:7077  stream-processor.py
+comando per runnare l'eseguibile --> docker exec spark-master /spark/bin/spark-submit --packages "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,com.datastax.spark:spark-cassandra-connector_2.12:3.0.1,com.datastax.cassandra:cassandra-driver-core:4.0.0" --master spark://spark-master:7077  daily-streamer.py
+comando per runnare l'eseguibile --> docker exec spark-master /spark/bin/spark-submit --packages "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1,com.datastax.spark:spark-cassandra-connector_2.12:3.0.1,com.datastax.cassandra:cassandra-driver-core:4.0.0" --master spark://spark-master:7077 year-most-polluted.py
+
+#
+per avviare la dashboard --> aprire un terminale nella cartella dashboard ed esegire il comando flask run

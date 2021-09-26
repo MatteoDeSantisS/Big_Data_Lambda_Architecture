@@ -1,0 +1,178 @@
+version: '2.4' # 2.4 is the last version that supports depends_on conditions for service health
+
+networks:
+  net:
+
+services:
+  zookeeper:
+      image: confluentinc/cp-zookeeper:5.1.0
+      hostname: zookeeper
+      container_name: zookeeper
+      ports:
+        - 2181:2181
+      networks:
+        - net
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+      image: confluentinc/cp-kafka:5.1.0
+      ports:
+        - 9092:9092
+        - 9094:9094
+      restart: always
+      depends_on:
+        - zookeeper
+      environment:
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://kafka:9094
+        KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      hostname: kafka
+      container_name: kafka-stream
+      networks:
+        - net
+      restart: always  # docker network where all cassandra nodes will be put in
+
+  cass1:
+    image: cassandra:3.11.8   # better to use a specific version, if you want to control upgrades
+    container_name: cass1
+    hostname: cass1
+    mem_limit: 5g  # It's not strictly required, but it's better to have some memory limit
+    healthcheck:
+        test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+        interval: 5s
+        timeout: 5s
+        retries: 60
+    networks:
+      - net
+    ports:
+      - "9042:9042"  # Expose native binary CQL port for your apps
+    volumes:
+      - ./data/cass1:/var/lib/cassandra    # This is the volume that will persist data for cass1 node
+      - ./etc/cass1:/etc/cassandra   # Use your own config files for full control
+    environment: &environment    # Declare and save environments variables into "environment"
+        CASSANDRA_SEEDS: "cass1,cass2,cass3"    # The first two nodes will be seeds
+        CASSANDRA_CLUSTER_NAME: PollutionSystem
+        CASSANDRA_DC: PollutionSystem
+        CASSANDRA_RACK: PollutionSystem
+        CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+        CASSANDRA_NUM_TOKENS: 128
+        CASSANDRA_START_RPC: "true"
+
+  cass2:
+    image: cassandra:3.11.8
+    container_name: cass2
+    hostname: cass2
+    mem_limit: 2g
+    healthcheck:
+        test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+        interval: 5s
+        timeout: 5s
+        retries: 60
+    networks:
+      - net
+    ports:
+      - "9043:9042"  # Expose native binary CQL port for your apps
+    volumes:
+      - ./data/cass2:/var/lib/cassandra    # This is the volume that will persist data for cass2 node
+      - ./etc/cass2:/etc/cassandra    # Use your own config files for full control
+    environment: *environment    # point to "environment" to use the same environment variables as cass1
+    depends_on:
+      - "cass1"   # start cass2 only after cass1 is healthy
+        
+
+  cass3:
+    image: cassandra:3.11.8
+    container_name: cass3
+    hostname: cass3
+    mem_limit: 2g
+    healthcheck:
+        test: ["CMD", "cqlsh", "-e", "describe keyspaces" ]
+        interval: 5s
+        timeout: 5s
+        retries: 60
+    networks:
+      - net
+    ports:
+      - "9044:9042"  # Expose native binary CQL port for your apps
+    volumes:
+      - ./data/cass3:/var/lib/cassandra    # This is the volume that will persist data for cass3 node
+      - ./etc/cass3:/etc/cassandra    # Use your own config files for full control
+    environment: *environment    # point to "environment" to use the same environment variables as cass1
+    depends_on:
+      - "cass1"    # start cass3 only after cass1 is healthy
+  spark-master:
+    image: bde2020/spark-master:3.1.1-hadoop3.2
+    container_name: spark-master
+    hostname: spark-master
+    healthcheck:
+      interval: 5s
+      retries: 100
+  
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4040:4040"
+      - "4041:4041"
+    environment:
+      - INIT_DAEMON_STEP=false
+      - SPARK_DRIVER_HOST=192.168.1.5
+    volumes:
+      - ./spark-streaming-processor/target:/opt/spark-data
+    networks:
+      - net
+
+  spark-worker-1:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    container_name: spark-worker-1
+    hostname: spark-worker-1
+
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+    volumes:
+      - ./data/spark/:/opt/spark-data
+    networks:
+      - net
+
+  spark-worker-2:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    container_name: spark-worker-2
+    hostname: spark-worker-2
+   
+    depends_on:
+      - spark-master
+    ports:
+      - "8082:8081"
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+    volumes:
+      - ./data/spark/:/opt/spark-data
+    networks:
+      - net
+
+
+  spark-worker-3:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    container_name: spark-worker-3
+    hostname: spark-worker-3
+
+    depends_on:
+      - spark-master
+    ports:
+      - "8083:8081"
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+    volumes:
+      - ./data/spark/:/opt/spark-data
+    networks:
+      - net   
+ 

@@ -4,46 +4,49 @@ from datetime import datetime
 import time
 import json
 
-csv = pd.read_csv("epa_daily.csv")
-epa_daily = csv.values.tolist()
+csv = pd.read_csv("dataset/pollution.csv")
+pollution = csv.values.tolist()
 
-producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer = lambda x: json.dumps(x).encode('utf-8'))
 
 while True:
-    current_date = datetime.strptime(epa_daily[0][4], "%Y-%m-%d")
+    current_date = datetime.strptime(pollution[0][3], "%Y-%m-%d")
 
-    for record in epa_daily:
-        if(current_date==datetime.strptime(record[4], "%Y-%m-%d")):
+    for record in pollution:
+        
+        if(current_date == datetime.strptime(record[3], "%Y-%m-%d")):
             record = tuple(record)
-            to_send = {
-                'state_code': record[0],
-                'county_code': record[1],
-                'parameter_name': record[2],
-                'sample_duration': record[3],
-                'date_local': record[4],
-                'units_of_measure': record[5],
-                'observation_count': record[6],
-                'arithmetic_mean': record[7],
-                'state_name': record[8],
-                'county_name': record[9],
-                'city_name': record[10]
+            data_send = {
+            'State': record[0],
+            'County': record[1],
+            'City': record[2],
+            'Date Local': record[3],
+            'NO2 Mean': record[4],
+            'NO2 AQI': record[5],
+            'SO2 Mean': record[6],
+            'SO2 AQI': record[7],
+            'CO Mean': record[8],
+            'CO AQI': record[9],
+            'O3 Mean': record[8],
+            'O3 AQI': record[9]
             }
-            producer.send('sensors-data', value = to_send)
+            producer.send('sensors-data', value = data_send)
         else:
             time.sleep(10)
-            current_date = datetime.strptime(record[4], "%Y-%m-%d")
+            current_date = datetime.strptime(record[3], "%Y-%m-%d")
             record = tuple(record)
-            to_send = {
-                'state_code': record[0],
-                'county_code': record[1],
-                'parameter_name': record[2],
-                'sample_duration': record[3],
-                'date_local': record[4],
-                'units_of_measure': record[5],
-                'observation_count': record[6],
-                'arithmetic_mean': record[7],
-                'state_name': record[8],
-                'county_name': record[9],
-                'city_name': record[10]
+            data_send = {
+            'State': record[0],
+            'County': record[1],
+            'City': record[2],
+            'Date Local': record[3],
+            'NO2 Mean': record[4],
+            'NO2 AQI': record[5],
+            'SO2 Mean': record[6],
+            'SO2 AQI': record[7],
+            'CO Mean': record[8],
+            'CO AQI': record[9],
+            'O3 Mean': record[8],
+            'O3 AQI': record[9]
             }
-            producer.send('sensors-data', value = to_send)
+            producer.send('sensors-data', value = data_send)
