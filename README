@@ -1,1 +1,12 @@
+Per avviare l'architettura:
+  - posizionarsi sulla cartella del progetto 
+  - eseguire lo script ./setup.sh
+  - aspettare che tutti i processi vengano avviati
+  - aprire un nuovo terminale sempre nella cartella del progetto
+  - eseguire lo script ./init.sh
+  
+Per avviare la dashboard:
+  - posizionarsi sulla cartella della dashboard
+  - eseguire il comando 'flask run'
+  - aprire il browser e andare su localhost:7000
 
